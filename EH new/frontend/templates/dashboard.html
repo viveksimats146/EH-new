@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Security Dashboard - SOC Analytics{% endblock %}
+
+{% block content %}
+<div class="page-title-block" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 class="page-title">📊 SOC Security Dashboard</h1>
+    <p class="page-subtitle">Real-time SQL injection threat monitoring, query telemetry, and prevention statistics.</p>
+  </div>
+  <button id="seed-demo-btn" class="btn-action" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+    🌱 Seed Demo Data
+  </button>
+</div>
+
+<!-- Key Metric Cards -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-label">Total Queries</div>
+    <div id="stat-total" class="metric-value">0</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Normal</div>
+    <div id="stat-normal" class="metric-value val-normal">0</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">May Be SQLi</div>
+    <div id="stat-maybe" class="metric-value val-maybe">0</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">SQL Injection</div>
+    <div id="stat-sqli" class="metric-value val-sqli">0</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Blocked Requests</div>
+    <div id="stat-blocked" class="metric-value val-blocked">0</div>
+  </div>
+</div>
+
+<!-- Charts Section -->
+<div class="charts-grid">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Classification Distribution</h2>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="pieChart"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Detections Over Time</h2>
+    </div>
+    <div class="chart-wrapper">
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Security Summary & Recent Activity -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Security Telemetry Summary</h2>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        <span style="color: var(--text-muted);">Current Detection Rate</span>
+        <strong id="summary-detection-rate" style="color: var(--primary-cyan);">0.0%</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        <span style="color: var(--text-muted);">Injection Attack Percentage</span>
+        <strong id="summary-sqli-pct" style="color: var(--color-sqli);">0.0%</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+        <span style="color: var(--text-muted);">Prevention Engine Status</span>
+        <strong style="color: var(--color-normal);">ACTIVE & ENFORCING</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Local Detection Engine</span>
+        <strong style="color: var(--text-main);">Rule Engine + ML Hybrid</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">Recent Activity Feed</h2>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Query</th>
+            <th>Class</th>
+            <th>Decision</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="recent-activity-list">
+          <tr>
+            <td colspan="5" style="text-align: center; color: var(--text-muted);">Loading activity...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/charts.js"></script>
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SQL Injection Detection & Prevention System{% endblock %}</title>
+  <meta name="description" content="Local Automated SQL Injection Detection and Prevention System">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code&display=swap">
+</head>
+<body>
+  <!-- Navigation Topbar -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <span class="shield-icon">🛡️</span> SQL INJECTION DETECTOR
+    </a>
+    <ul class="nav-links">
+      <li>
+        <a href="/" class="nav-link {% if active_page == 'analyzer' %}active{% endif %}">
+          Query Analyzer
+        </a>
+      </li>
+      <li>
+        <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="/injections" class="nav-link {% if active_page == 'injections' %}active{% endif %}">
+          Injection History
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>Automated SQL Injection Detection & Prevention System &bull; 100% Local Engine &bull; SOC Cybersecurity Dashboard</p>
+  </footer>
+
+  <!-- Standalone Local Chart.js library -->
+  <script src="/static/vendor/chart.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

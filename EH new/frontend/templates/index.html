@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Query Analyzer - SQL Injection Detection{% endblock %}
+
+{% block content %}
+<div class="page-title-block">
+  <h1 class="page-title">🔍 SQL Query & Input Analyzer</h1>
+  <p class="page-subtitle">Analyze raw user inputs locally using multi-stage normalization, pattern rules, and ML scoring.</p>
+</div>
+
+<div class="card">
+  <form id="query-form" class="analyzer-form">
+    <label for="query-input" style="font-weight: 600; font-size: 0.95rem; color: var(--text-main);">
+      Enter SQL Query or User Input
+    </label>
+    <textarea
+      id="query-input"
+      class="query-input-area"
+      placeholder="e.g. SELECT * FROM users WHERE username='admin' OR '1'='1' --"
+      required
+    ></textarea>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <button type="submit" id="analyze-btn" class="btn-primary">
+        Analyze Query
+      </button>
+
+      <div class="sample-presets">
+        <span class="preset-label">Test Samples:</span>
+        <button type="button" class="preset-pill" data-query="SELECT * FROM products WHERE category = 'electronics'">Safe Query</button>
+        <button type="button" class="preset-pill" data-query="' AND 1=1">Suspicious (AND 1=1)</button>
+        <button type="button" class="preset-pill" data-query="' OR '1'='1' --">Attack (OR 1=1 --)</button>
+        <button type="button" class="preset-pill" data-query="' UNION SELECT username, password FROM users --">Attack (UNION SELECT)</button>
+      </div>
+    </div>
+  </form>
+
+  <div id="alert-container" style="margin-top: 1rem;"></div>
+</div>
+
+<!-- Analysis Result Card -->
+<div id="result-card" class="card result-card">
+  <div class="result-header">
+    <h2 class="card-title">Analysis Findings</h2>
+    <span id="res-badge" class="badge">NORMAL</span>
+  </div>
+
+  <div class="result-grid">
+    <div class="result-stat-item">
+      <div class="result-stat-label">Risk Score</div>
+      <div id="res-score" class="result-stat-val" style="color: var(--primary-cyan);">0/100</div>
+    </div>
+    <div class="result-stat-item">
+      <div class="result-stat-label">Security Decision</div>
+      <div id="res-decision" class="result-stat-val">ALLOW</div>
+    </div>
+    <div class="result-stat-item">
+      <div class="result-stat-label">Detection Method</div>
+      <div id="res-method" class="result-stat-val" style="font-size: 1rem; margin-top: 0.5rem; color: var(--text-muted);">LOCAL_RULE_ENGINE</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 1.5rem;">
+    <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+      Detected Injection Indicators & Explanations
+    </h3>
+    <ul id="res-patterns" class="pattern-list"></ul>
+  </div>
+
+  <div style="margin-top: 1.5rem; text-align: right;">
+    <a id="res-details-link" href="#" class="btn-action" style="display: none;">View Detailed Query Record &rarr;</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/detector.js"></script>
+{% block end %}{% endblock %}
+{% endblock %}

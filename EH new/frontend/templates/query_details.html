@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Query Details #{{ query_id }} - Security Analysis{% endblock %}
+
+{% block content %}
+<div class="page-title-block" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <h1 class="page-title">🔍 Query Telemetry Details</h1>
+    <p class="page-subtitle">Detailed risk breakdown and forensic log inspection for Query Record #<span id="detail-id">{{ query_id }}</span></p>
+  </div>
+  <a href="/injections" class="btn-action">&larr; Back to Injections History</a>
+</div>
+
+<div class="card">
+  <div style="margin-bottom: 1.5rem;">
+    <h3 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 0.5rem;">
+      Analyzed Raw Query String
+    </h3>
+    <pre id="detail-query" class="query-input-area" style="height: auto; min-height: 80px; white-space: pre-wrap; font-size: 0.95rem;"></pre>
+  </div>
+
+  <div class="result-grid">
+    <div class="result-stat-item">
+      <div class="result-stat-label">Classification</div>
+      <div id="detail-classification" style="margin-top: 0.4rem;"><span id="detail-badge" class="badge">...</span></div>
+    </div>
+    <div class="result-stat-item">
+      <div class="result-stat-label">Risk Score</div>
+      <div id="detail-score" class="result-stat-val" style="color: var(--primary-cyan);">0/100</div>
+    </div>
+    <div class="result-stat-item">
+      <div class="result-stat-label">Security Decision</div>
+      <div id="detail-decision" class="result-stat-val">ALLOW</div>
+    </div>
+    <div class="result-stat-item">
+      <div class="result-stat-label">Execution Status</div>
+      <div id="detail-status" class="result-stat-val" style="font-size: 1.1rem; margin-top: 0.3rem;">ALLOWED</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+    <div class="result-stat-item">
+      <div class="result-stat-label">Detection Method</div>
+      <div id="detail-method" style="margin-top: 0.3rem; color: var(--text-main); font-weight: 600;">LOCAL_RULE_ENGINE</div>
+    </div>
+    <div class="result-stat-item">
+      <div class="result-stat-label">Timestamp (UTC)</div>
+      <div id="detail-timestamp" style="margin-top: 0.3rem; color: var(--text-muted); font-size: 0.9rem;">-</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 2rem;">
+    <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem;">
+      Detected Patterns & Threat Explanations
+    </h3>
+    <ul id="detail-patterns" class="pattern-list"></ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const queryId = "{{ query_id }}";
+  try {
+    const res = await fetch(`/api/query/${queryId}`);
+    if (!res.ok) throw new Error("Query log not found");
+    const data = await res.json();
+
+    document.getElementById("detail-query").innerText = data.query_text;
+    document.getElementById("detail-score").innerText = `${data.risk_score}/100`;
+    document.getElementById("detail-decision").innerText = data.decision;
+    document.getElementById("detail-method").innerText = data.detection_method;
+    document.getElementById("detail-timestamp").innerText = data.timestamp;
+    document.getElementById("detail-status").innerText = data.execution_status;
+
+    const badgeEl = document.getElementById("detail-badge");
+    badgeEl.innerText = data.classification;
+    if (data.classification === "NORMAL") badgeEl.className = "badge badge-normal";
+    else if (data.classification === "MAY BE SQL INJECTION") badgeEl.className = "badge badge-maybe";
+    else badgeEl.className = "badge badge-sqli";
+
+    const patternsEl = document.getElementById("detail-patterns");
+    patternsEl.innerHTML = "";
+    if (data.detected_patterns && data.detected_patterns.length > 0) {
+      data.detected_patterns.forEach(pat => {
+        const li = document.createElement("li");
+        li.className = "pattern-item";
+        li.innerText = `✓ ${pat}`;
+        patternsEl.appendChild(li);
+      });
+    } else {
+      const li = document.createElement("li");
+      li.style.color = "var(--text-muted)";
+      li.innerText = "✓ No suspicious SQL injection indicators detected.";
+      patternsEl.appendChild(li);
+    }
+  } catch (err) {
+    alert("Could not fetch query detail");
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,21 @@
+query,label
+"SELECT * FROM users WHERE username = 'admin'",0
+"SELECT name, email FROM customers WHERE id = 10",0
+"SELECT * FROM products WHERE category = 'electronics'",0
+"UPDATE users SET last_login = NOW() WHERE id = 42",0
+"INSERT INTO orders (user_id, total_amount) VALUES (15, 99.99)",0
+"SELECT count(*) FROM orders WHERE status = 'shipped'",0
+"john.doe@example.com",0
+"books & games",0
+"hello world search query",0
+"SELECT title, author FROM books WHERE year > 2020",0
+"SELECT * FROM employees WHERE department_id = 3 ORDER BY name ASC",0
+"DELETE FROM cart WHERE item_id = 7 AND user_id = 12",0
+"SELECT * FROM inventory WHERE stock_quantity > 0",0
+"laptop computer i7 16gb",0
+"how to fix python indentation error",0
+"SELECT user_id, sum(amount) FROM transactions GROUP BY user_id",0
+"alice_smith",0
+"security dashboard settings",0
+"SELECT * FROM articles WHERE published = true",0
+"parameterized input value 123",0

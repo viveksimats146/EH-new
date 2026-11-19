@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.db
+*.sqlite
+*.sqlite3
+.pytest_cache/
+.env
+venv/
+env/
+models/*.pkl
+!models/.gitkeep
+outputs/

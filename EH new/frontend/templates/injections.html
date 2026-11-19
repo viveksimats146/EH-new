@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}SQL Injection History - Audit Log{% endblock %}
+
+{% block content %}
+<div class="page-title-block">
+  <h1 class="page-title">🚨 SQL Injection History</h1>
+  <p class="page-subtitle">Dedicated audit log containing high-confidence malicious SQL injection attempts blocked or flagged by the system.</p>
+</div>
+
+<!-- Filters Bar -->
+<div class="card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem;">
+  <div class="filter-bar">
+    <div style="flex: 1; min-width: 200px;">
+      <input
+        type="text"
+        id="search-input"
+        class="form-control"
+        placeholder="Search query string or detected pattern..."
+        style="width: 100%;"
+      >
+    </div>
+    <div>
+      <select id="risk-filter" class="form-control">
+        <option value="">All Risk Scores (60 - 100)</option>
+        <option value="70">Risk Score >= 70</option>
+        <option value="85">Risk Score >= 85</option>
+        <option value="95">Risk Score >= 95</option>
+      </select>
+    </div>
+    <button id="apply-filters-btn" class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+      Search / Filter
+    </button>
+  </div>
+</div>
+
+<!-- Injection Records Table -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Time</th>
+          <th>Query / Input</th>
+          <th>Risk</th>
+          <th>Detected Pattern</th>
+          <th>Decision</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="injection-table-body">
+        <tr>
+          <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+            Loading SQL Injection records...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="pagination-controls" style="display: flex; justify-content: center; margin-top: 1.5rem;"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/history.js"></script>
+{% endblock %}
